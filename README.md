@@ -52,21 +52,28 @@ Data = loadmat("ReachData.mat")
 Data
 ```
 
-Notice that the data is sotred into two arrays named 'direction' and 'R'. Use the ‘shape’ method to see the size of data arrays. 
+Notice that the data is sotred into two arrays named 'direction' and 'R'. It might be hard to see this, but if you scroll through the data you should see that each array has a name in single quotes. 
 
 The matrix R contains the firing rate of each of 143 neurons for a total of 158 trials. 
 The vector direction specifies the reach direction for each of the 158 trials. The direction is encoded for simplicity as a single number representing the angle the animal was asked to move its arm in. Direction 1 corresponds to a rightward reach (0 degrees), direction 2 to 45 degrees, direction 3 to 90 degrees (straight up), etc, with direction 8 corresponding to 315 degrees. 
 
-Practice using 'shape' and slicing by assigning the size of each dimension in R to a variable. You can try calling those variables "num_neruons" for number of neurons for example, and "num_trials" for number of trials. 
-
-You may also want to extract the data from the mat file into an array to make working with it easier. Make sure the size of the data checks out. You can use print statements and "shape".
+You want to extract the data from the mat file into an array to make working with it easier. 
 
 ```python
-direction = # slicing out direction data
-rate = # slicing out neural data, contains firing rate of 143 neurons for a total of 158 trials
+direction = Data["direction"]# slicing out direction data
+rate = Data["R"]# slicing out neural data, contains firing rate of 143 neurons for a total of 158 trials
 
 # each trial has a corresponding direction stored in the "direction" list which should have 158 entries
 # for each trial, the average firing rate of each of the 143 neurons is recorded 
+```
+
+Use 'shape' and slicing by assigning the size of each dimension in R to a variable. You can try calling those variables "neurons" for number of neurons for example, and "trials" for number of trials. 
+
+Read more about the expected output from the [shape method](https://www.askpython.com/python-modules/pandas/shape-method)
+
+```python
+neurons = rate.shape[0]
+trials = rate.shape[1]
 ```
 
 ## Part 2: Decoding neural activity during the reaching task
@@ -84,19 +91,24 @@ We first center the data by removing the population mean from each point, thereb
 <details>
 <summary>Reveal Code</summary>
 <pre>
-  # first we find the mean using the method ".mean" from numpy which we have imported as "np" to make it easier to call (less typing each time)
+# first we find the mean using the method ".mean" from numpy which we have imported as "np" to make it easier to call (less typing each time)
 mean = np.mean(rate,axis=1) # 143 dimensional horizontal vector, one mean for each neuron
+<br>
 # then we make an array the same shape as our data of this mean (mean of each neuron repeated for all trials)
-mean_vector = npm.repmat(mean, trials,1).T # repeat mean 158 times and take transpose using ".repmat" and ".T" from numpy.matlib
+mean_array = npm.repmat(mean, trials,1).T # repeat mean 158 times and take transpose using ".repmat" and ".T" from numpy.matlib
+<br>
 # then we substract the mean from each neuron
 # Z will be our centered data variable
-Z = # write code to substract the mean from each measurement in each trial, Hint: check array sizes match
+Z = # write a line of code to substract the mean from each measurement in each trial, Hint: check array sizes match
 </pre>
 </details>
 
-Print out the shapes of "mean", "mean_vector", and "z". Do these sizes check out with what we expect?
+Print out the shapes of "mean", "mean_array", and "z". Do these sizes check out with what we expect?
 
 At this point we can optionally try seeing what correlations we can come up with, and whether they are any useful at this stage, using the centered neuron firing data. You can feel free to play around with the data in your own way, or you can follow along with the lab suggestion. 
+
+If this is the first time you are plotting anything, take a look at [this guide to using matplotlib]([https://pages.github.com/](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html))
+You have imported this library as "plt", so you can plot by calling plt.plot() and using the correct syntax. 
 
 <details>
 <summary>Reveal Suggestion</summary>
@@ -109,9 +121,9 @@ print(direction.shape)
 <br>
 # To make looping through directions easier, we can remove the extra dimension in our direction array using "squeeze"
 dir = np.squeeze(direction)
-print("dir.shape :",dir.shape)
+print("new squeezed shape of direction array is ",dir.shape)
 <br>
-# Now write code to plot the color coded neural acitivty. neuron 7 firing rate should be on one axis and neuron 8 should be on the other
+# Now write code to plot the color coded neural acitivty. Neuron 7 firing rate should be on one axis and neuron 8 should be on the other
 # each reaching direction should be coded by a different color
 # directions range from 1 to 8 corresponding to 0 through 315 degrees in 45 degree angles
 <br>
