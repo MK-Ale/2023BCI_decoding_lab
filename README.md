@@ -84,18 +84,45 @@ We first center the data by removing the population mean from each point, thereb
 <details>
 <summary>Reveal Code</summary>
 <pre>
+  # first we find the mean using the method ".mean" from numpy which we have imported as "np" to make it easier to call (less typing each time)
 mean = np.mean(rate,axis=1) # 143 dimensional horizontal vector, one mean for each neuron
 # then we make an array the same shape as our data of this mean (mean of each neuron repeated for all trials)
-mean_vector = npm.repmat(mean, trials,1).T # repeat mean 158 times and take transpose. Need numpy.matlib!
+mean_vector = npm.repmat(mean, trials,1).T # repeat mean 158 times and take transpose using ".repmat" and ".T" from numpy.matlib
 # then we substract the mean from each neuron
 # Z will be our centered data variable
-Z = # write code to substract the mean from each measurement in each trial 
+Z = # write code to substract the mean from each measurement in each trial, Hint: check array sizes match
 </pre>
 </details>
 
 Print out the shapes of "mean", "mean_vector", and "z". Do these sizes check out with what we expect?
 
+At this point we can optionally try seeing what correlations we can come up with, and whether they are any useful at this stage, using the centered neuron firing data. You can feel free to play around with the data in your own way, or you can follow along with the lab suggestion. 
 
+<details>
+<summary>Reveal Suggestion</summary>
+<pre>
+# We can try to visualize the neuronal data along any arbitrary two dimensions to observe how the population of neurons in motor cortex fires differently when the monkey reaches in different directions. First, write Python code to plot two dimensions (e.g., Neurons 7 and 8) of the centered data. 
+<br>
+# we can do this by looping through the data and plotting each reaching direction in a different color.
+# lets recall how the directions are labeled in the data
+print(direction.shape)
+<br>
+# To make looping through directions easier, we can remove the extra dimension in our direction array using "squeeze"
+dir = np.squeeze(direction)
+print("dir.shape :",dir.shape)
+<br>
+# Now write code to plot the color coded neural acitivty. neuron 7 firing rate should be on one axis and neuron 8 should be on the other
+# each reaching direction should be coded by a different color
+# directions range from 1 to 8 corresponding to 0 through 315 degrees in 45 degree angles
+<br>
+for #insert your loop here : 
+   # find index of data that matches direction iterating in loop
+   # plot neuron 7 and 8 data for that index
+   # go on to next direction
+</pre>
+</details>
+
+Does any pattern stand out to you? What can we say about how the reaching motion is encoded in the firing rates at this point in our analysis? 
 
 
 
