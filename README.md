@@ -107,8 +107,8 @@ Print out the shapes of "mean", "mean_array", and "z". Do these sizes check out 
 
 At this point we can optionally try seeing what correlations we can come up with, and whether they are any useful at this stage, using the centered neuron firing data. You can feel free to play around with the data in your own way, or you can follow along with the lab suggestion. 
 
-If this is the first time you are plotting anything, take a look at [this guide to using matplotlib]([https://pages.github.com/](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html))
-You have imported this library as "plt", so you can plot by calling plt.plot() and using the correct syntax. 
+If this is the first time you are plotting anything, take a look at [this guide to using matplotlib](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html))
+You have imported this library as "plt" in the line "import matplotlib.pyplot as plt" at the top of your code file, so you can plot by calling plt.plot() and using the correct syntax. 
 
 <details>
 <summary>Reveal Suggestion</summary>
@@ -116,21 +116,34 @@ You have imported this library as "plt", so you can plot by calling plt.plot() a
 # We can try to visualize the neuronal data along any arbitrary two dimensions to observe how the population of neurons in motor cortex fires differently when the monkey reaches in different directions. First, write Python code to plot two dimensions (e.g., Neurons 7 and 8) of the centered data. 
 <br>
 # we can do this by looping through the data and plotting each reaching direction in a different color.
-# lets recall how the directions are labeled in the data
-print(direction.shape)
 <br>
-# To make looping through directions easier, we can remove the extra dimension in our direction array using "squeeze"
+# lets recall that direction labels are just digits from 1 to 8, so one way to do this would be to find the indexes in 'directions' that correspond to each direction label one at a time using a for loop. We can iterate through the numbers from 1 through 8, and ask python to get the indexes, or location, of those trials where that label occurs in 'directions', and then use those same indexes to plot the firing rate of neuron 7 and neuron 8. If this seems confusing, try skething out the operations on a peice of paper. 
+<br>
+# To make looping through 'directions easier', we can remove the extra dimension in our direction array using the "squeeze" command. Note that now we called this new array 'dir' for short.
 dir = np.squeeze(direction)
 print("new squeezed shape of direction array is ",dir.shape)
 <br>
 # Now write code to plot the color coded neural acitivty. Neuron 7 firing rate should be on one axis and neuron 8 should be on the other
-# each reaching direction should be coded by a different color
+# each reaching direction should be coded by a different color (this will happen automatically if you plot them all on the same graph, rather than on separate plots)
 # directions range from 1 to 8 corresponding to 0 through 315 degrees in 45 degree angles
 <br>
-for #insert your loop here : 
-   # find index of data that matches direction iterating in loop
+for #insert your loop to iterate through direction labels here : 
+   # find index where that direction label occurs in 'dir'
    # plot neuron 7 and 8 data for that index
-   # go on to next direction
+</pre>
+</details>
+
+<details>
+<summary>Reveal Plotting Code</summary>
+<pre>
+for label in range(# write code here that outputs numbers from 1 to 8):
+  index = (np.argwhere(dir==label)) # find index of data that matches direction iterating in loop (here I use np.argwhere but there are many other ways)
+  plt.plot(Z[6,index], Z[7,index], '.', markersize=10, label=str(label*45))   # plot neuron 7 and 8 data at that index
+<br>
+plt.xlabel('Neuron 7')
+plt.ylabel('Neuron 8')
+plt.legend()
+plt.show()
 </pre>
 </details>
 
