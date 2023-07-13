@@ -136,7 +136,7 @@ for #insert your loop to iterate through direction labels here :
 <details>
 <summary>Reveal Plotting Code</summary>
 <pre>
-for label in range(# write code here that outputs numbers from 1 to 8):
+for label in [1,2,3,4,5,6,7,8]:
   index = (np.argwhere(dir==label)) # find index of data that matches direction iterating in loop (here I use np.argwhere but there are many other ways)
   plt.plot(Z[6,index], Z[7,index], '.', markersize=10, label=str(label*45))   # plot neuron 7 and 8 data at that index
 <br>
