@@ -19,7 +19,7 @@ Right: Macaque implanted with a wireless microelectrode array from Neuralink pla
 
 ## Part 1: Neurons transmit information using a rate (or frequency) code.
 
-Recordings from each individual electrode are filtered to remove artefacts caused by the recording hardware, movements, and other unwanted experimental noise, leaving behind candidate neuronal signals. Each electrode listens in on the population of neurons, rather than just one single neuron per electrode. This kind of data is referred as field potentials. From those aggregate signals, individual spikes are detected using spike sorting algorithms that separate waveforms from individual neurons. (If you’re interested in learning more, some of these algorithms perform dimensionality reduction, which we will be doing in this lab, and clustering). The timing of action potentials can be extracted from the signal, giving a vector of spiking times (t: time) or spiking rates (Hz: amount of spikes / 1 second) that can be matched to the direction of motion the animal was making at that time. 
+Recordings from each individual electrode are filtered to remove artefacts caused by the recording hardware, movements, and other unwanted experimental noise, leaving behind candidate neuronal signals. Each electrode listens in on the population of neurons, rather than just one single neuron per electrode. This kind of data is referred as field potentials. The timing of action potentials can be extracted from the signal, giving a vector of spiking times (t: time) or spiking rates (Hz: amount of spikes / 1 second) that can be matched to the direction of motion the animal was making at that time. 
 
 We will be working with spiking rates from 143 neurons in the motor cortex on both hemispheres over 158 trials. At the start of each trial, the macaque is presented with a visual cue to move its arm from a center starting position, in a certain direction on a circle in front of it, dictated by the direction of the cue, and is rewarded for completing the movement. Each trial contains only one movement of the macaque’s arm, captured with position sensors. There are a total of 8 different reaching directions, each separated from one another by 45 degrees.
 
@@ -224,7 +224,7 @@ for #insert your loop here :
 ```
 
 <details>
-<summary>If really stuc, reveal answer</summary>
+<summary>If really stuck, after asking for help, reveal answer</summary>
 <pre>
 print(V1[:2,:].T.shape)
 print(Zproj.shape)
@@ -250,8 +250,30 @@ ax3.grid()
 
 # Part 3: Challenge – Programming a BCI, moving a prosthetic arm.
 
+Once researchers have a model of how directional movements are encoded at the level of the cortex, you can predict what the subject’s movement intentions are just from their thoughts. In tasks involving BCI, you will often find that a handful of neurons is sufficient to explain the coding of a task at the level of the cortex. In certain cases, it is possible to identify single neurons which can be “read out” to decode a task. When working with human patients, you can cue the person to think about moving their arm in a certain direction, while using the decoder to predict their imagined movements. Successful decoding is a major component of brain computer interfaces that can be used to connect patients who have lost the ability to move with prosthetic devices. Prosthetics can range from actuators like robotic arms, to digital interfaces. 
 
+![fig3](fig3.png)
 
+_A paralyzed patient implanted with a microelectrode array participating in a research study at Brown University. In the video version, she can be seen moving the robotic arm to bring the bottle towards her mouth using her thoughts. (Photo credit: Briangate2.org)_
+
+In this part of the lab, use the decoding scheme we completed above to program a simple prosthetic arm that can reproduce the reaching task for that same macaque who has lost the ability to move their arms (due to being placed in a restraint for example). For simplicity, the hand has two motors: a positive voltage to motor A makes the hand move to the right, and a negative voltage makes it move to the left. Similarly for motor B, a positive voltage makes the hand move up, and a negative voltage makes it move down. Assume zero degrees to be the extreme left side of the arena, and 90 degrees to be the top of the arena. 
+
+**How would you do this?**
+
+<details>
+<summary>Reveal Example</summary>
+<img src="fig4.png">
+We connected each of the 143 neurons in our dataset to both motors and assign a weight to each of those connections. This weight will determine by how much the activity of each neuron influences the voltage to that motor. V_(A )= ∑w_(Ai )* rate_i  where V_(A) is the voltage of motor A, w_(Ai) is the weight between the ith neuron and motor A, and rate_i is the mean subtracted firing rate (activity) of neuron i. 
+</details>
+
+### part 3 challenge questions
+Suppose we used the weights specified by the first principal component from the exercise above to connect each neuron to motor A. What would happen when the macaque tries to reach up? 
+
+Suppose we now connect the neurons to motor B using the weights given by the second principal component. What will happen now when the monkey tries to reach upward towards 90 degrees? 
+
+What can we do to correct this motion so that the hand moves upward when the monkey thinks of moving it upward? Challenge: try applying a transformation to the data to show the resulting corrected reaching data and create a new plot. 
+
+Is it possible to use the same principal components we have found in this exercise to decode the motions of another macaque? What do you think will happen if we move the prosthetic arm using another subject’s neural activity?
 
 
 
