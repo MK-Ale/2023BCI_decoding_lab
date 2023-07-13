@@ -122,7 +122,134 @@ for #insert your loop here :
 </pre>
 </details>
 
-Does any pattern stand out to you? What can we say about how the reaching motion is encoded in the firing rates at this point in our analysis? 
+**Does any pattern stand out to you? What can we say about how the reaching motion is encoded in the firing rates at this point in our analysis?**
+
+The second step after centering our data is to compare the firing rates for each neuron with one another across trials to get a sense of how their activities co-vary with one other when the animal is moving in a single direction. This is done by computing a covariance matrix. This is a 143 by 143 square matrix where each entry of the matrix is the value of the covariance of a neuron with another partner in the dataset. Positive values indicate positive correlation, meaning as one neuronal firing rate increases, so does the other partner neuron. Negative values indicate the opposite correlation between firing rates, as one increases firing, the other neuron will decrease firing. 
+
+To compute the covariance matrix **Q**, multiply the centered data matrix you obtained above by its transpose and divide by the number of trials using the variable ‘trials’. 
+
+<details>
+<summary>Reveal Covariance Code</summary>
+<pre>
+# Compute the covariance matrix that we will use to determine the principal neuronal components. 
+# What size is this matrix? What does the ijth entry of this matrix represent?
+<br>
+Q = (Z@Z.T)/trials #this is our covariance matrix
+</pre>
+</details>
+
+**Examine a few elements of this matrix. What do you expect the diagonal of this matrix to represent?**
+
+The covariance matrix is what we will use to find the principle neuronal components that explain most of the variance in the data cloud. We do this by computing the eigenvectors of the covariance matrix, which are directions of maximal variance in the data. There is one eigenvector for every dimension in the original dataset, which means we will have 143 eigenvectors. Each vector V comes paired with a value, called its eigen value D, proportional to how much variance is captured by that eigenvector. To find the 2 directions of maximal variance, we will choose the two highest eigenvalues and their corresponding eigenvectors will serve as those principal directions.
+
+<details>
+<summary>Reveal Eigenvector Code</summary>
+<pre>
+# Use the eig command from numpy.linalg toolbox to compute the eigenvectors and eigenvalues 
+# of the covariance matrix. 
+(D,V) = npl.eig(Q)
+<br>
+print(D) # notice the values are in decreasing order
+print("*****************************")
+print(V) # these are the vectors corresponding to those values
+</pre>
+</details>
+
+Sort the eigenvalues from high to low using the method ‘.argsort’. Hint: because of the python method we used to get eigenvalues, the order happens to be the same. This is because the output is already automatically sorted. But its good practice to always sort just in case you use a different method. 
+
+<details>
+<summary>Reveal Code</summary>
+<pre>
+# When using other toolboxes, in general they are not correctly ordered. 
+# Its a good idea to always order the vectors and values just in case
+<br>
+# get the indeces corresponding to the reordering of the eigenvalues
+indx = D.argsort()[::-1]
+<br>
+# sort the eigenvectors according to those indeces
+D1 = D[indx]    # order happens to be the same as in D
+V1 = V[:,indx]
+</pre>
+</details>
+
+Try printing the indx variable and check that they are in order.
+
+Next, we want to know how much of the variance each eigenvalue captures. This is for us to know how much we are describing with each additional PC dimension we consider. To do this we look at the cumulative sum of each value. **We have done this part for you, but we leave the plotting part to you!**
+
+<details>
+<summary>Reveal Code</summary>
+<pre>
+# Now we will plot the eigenvalues and the percent of the variance they explain in decending order.
+# To do this we will call the cumulative sum function from numpy [np.cumsum()]              
+<br>
+var_explained = np.cumsum(D1)/sum(D1) 
+<br>
+# write your code for the plotting "var_explained" here! Use correct x and y axis labels
+<br>
+# What is the percent variance explained by first two principal components?
+print("Variance explained by first two PCs : ",format(var_explained[1],'.2%'))
+</pre>
+</details>
+
+Since we know we can capture a high amount of our original data’s variance in just the first two eigenvalues, let’s use these to re-visualize our data and try to make sense of the results. Now we are going to project (transform) the centered data onto the first two eigenvectors, which correspond to those eigenvalues. In python, projections are carried out by straightforward matrix multiplications using the **(@)** operator. 
+
+<details>
+<summary>Reveal Code</summary>
+<pre>
+# Now that we have seen what the data loks like for two neurons (two dimensions of the original data space)
+# we will see what our data looks like using the principal components from our analysis. 
+# Plot the data using the first two principal components
+<br>
+# to do this we have to rotate the data using the eigenvectors of our covariance matrix 
+#in short, these are teh directions which expain maximal variance in our data (directions) the resulting dimensions are no longer single neurons, 
+# in the rotated data dimensions are the sums of multiple neurons in such a way that separates our data the most
+<br>
+# project the data using matrix multiplication
+Zproj = V1.T[:2,:]@Z
+# Zproj = V1.T@Z # uncomment this to have access to all PCs later
+</pre>
+</details>
+
+**Pause: What is the resulting size of your newly transformed data?** This transformation has rotated the original data such that each point lies in a reduced-dimensional space along the two principal components. Like what we did before performing PCA on the data, plot the first two principal components of your projected data directions using a different color for each reaching direction. 
+
+```python
+# repeat the same plotting process but for the first two principal components of the data
+# plot the color coded neural acitivty using the first two principal components of the data (Zproj)
+
+# directions range from 1 to 8 corresponding to 0 through 315 degrees in 45 degree angles
+for #insert your loop here : 
+   # find index of data that matches direction iterating in loop
+   # plot first and second dimension of Zproj
+   # go on to next direction
+```
+
+<details>
+<summary>If really stuc, reveal answer</summary>
+<pre>
+print(V1[:2,:].T.shape)
+print(Zproj.shape)
+<br>
+# repeat the same plotting process but for the first two principal components of the data
+fig3, ax3 = plt.subplots(figsize=(8,8))
+<br>
+for idx in range(np.max(direction)):
+  ind = np.argwhere(direction==idx+1)
+  ax3.plot(Zproj[0,ind][:,0], Zproj[1,ind][:,0], '.', markersize=15, label=str(idx*45))
+<br>  
+fig3.legend()
+ax3.set(xlabel='PC 1', ylabel='PC 2')
+ax3.grid()
+<br>
+# now the data is well separated and directions have been decoded
+</pre>
+</details>
+
+**Do any patterns stand out to you now? What does this tell us about the task coding in the cortex? Compare this plot with the image in figure 2, what have we been able to recover (decode) from the neural data?**
+
+**Challenge question: Can you describe what the principal components represent in terms of the data? Think about each step in performing PCA and the resulting transformation.**
+
+# Part 3: Challenge – Programming a BCI, moving a prosthetic arm.
+
 
 
 
