@@ -171,7 +171,7 @@ The covariance matrix is what we will use to find the principle neuronal compone
 <summary>Reveal Eigenvector Code</summary>
 <pre>
 # Use the eig command from numpy.linalg toolbox to compute the eigenvectors and eigenvalues 
-# of the covariance matrix. 
+# of the covariance matrix. This is done for you below. 
 (D,V) = npl.eig(Q)
 <br>
 print(D) # notice the values are in decreasing order
@@ -184,20 +184,19 @@ Sort the eigenvalues from high to low using the method ‘.argsort’. Hint: bec
 
 <details>
 <summary>Reveal Code</summary>
-<pre>
-# When using other toolboxes, in general they are not correctly ordered. 
+<pre> 
 # Its a good idea to always order the vectors and values just in case
 <br>
 # get the indeces corresponding to the reordering of the eigenvalues
 indx = D.argsort()[::-1]
 <br>
 # sort the eigenvectors according to those indeces
-D1 = D[indx]    # order happens to be the same as in D
+D1 = D[indx]    
 V1 = V[:,indx]
 </pre>
 </details>
 
-Try printing the indx variable and check that they are in order.
+Try printing to check that they are in order.
 
 Next, we want to know how much of the variance each eigenvalue captures. This is for us to know how much we are describing with each additional PC dimension we consider. To do this we look at the cumulative sum of each value. **We have done this part for you, but we leave the plotting part to you!**
 
