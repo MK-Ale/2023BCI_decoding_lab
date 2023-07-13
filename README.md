@@ -117,9 +117,9 @@ You have imported this library as "plt" in the line "import matplotlib.pyplot as
 <br>
 # we can do this by looping through the data and plotting each reaching direction in a different color.
 <br>
-# lets recall that direction labels are just digits from 1 to 8, so one way to do this would be to find the indexes in 'directions' that correspond to each direction label one at a time using a for loop. We can iterate through the numbers from 1 through 8, and ask python to get the indexes, or location, of those trials where that label occurs in 'directions', and then use those same indexes to plot the firing rate of neuron 7 and neuron 8. If this seems confusing, try skething out the operations on a peice of paper. 
+# lets recall that direction labels are just digits from 1 to 8, so one way to do this would be to find the indexes in 'direction' that correspond to each direction label one at a time using a for loop. We can iterate through the numbers from 1 through 8, and ask python to get the indexes, or location, of those trials where that label occurs in 'direction', and then use those same indexes to plot the firing rate of neuron 7 and neuron 8. If this seems confusing, try skething out the operations on a peice of paper. 
 <br>
-# To make looping through 'directions easier', we can remove the extra dimension in our direction array using the "squeeze" command. Note that now we called this new array 'dir' for short.
+# To make looping through 'direction' easier, we can remove the extra dimension in our direction array using the "squeeze" command. Note that now we called this new array 'dir' for short.
 dir = np.squeeze(direction)
 print("new squeezed shape of direction array is ",dir.shape)
 <br>
