@@ -209,6 +209,7 @@ Next, we want to know how much of the variance each eigenvalue captures. This is
 var_explained = np.cumsum(D1)/sum(D1) 
 <br>
 # write your code for the plotting "var_explained" here! Use correct x and y axis labels
+#hint: use plt.plot()
 <br>
 # What is the percent variance explained by first two principal components?
 print("Variance explained by first two PCs : ",format(var_explained[1],'.2%'))
